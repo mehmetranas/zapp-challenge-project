@@ -1,3 +1,5 @@
+//TODO  add validation for delete record
+
 
 // Fix for reduced zappter-core
 window.languages = {
@@ -121,16 +123,44 @@ $(document).ready(function(){
 
         },
 
-        updateCustomersTable: function (data,isNewRecord) {
+         /**
+         * Update table after any action
+         * @param data object, new data for table or delteing data for update table
+         * @param actionType action type for table refresh for new record or editing table etc. (edit,delete,add) 
+         */
+        updateCustomersTable: function (data,actionType) {console.log(data);
+            if(!mycz.helpers.isset(actionType,true,true)) return;
+
             var checkData = mycz.helpers.isset(data,true,true);
             if(!checkData) return;
 
-            isNewRecord = mycz.helpers.isset(isNewRecord,true,true);
-            if(isNewRecord) {
-                var tr = mycz.ele.tr('',data);
+            switch (actionType) {
+                case 'add':
+                    var tr = mycz.ele.tr('',data,
+                    {'edit':true,'delete':true,'callback': function (item) {
+                        if(item.type === 'edit') {
+                            alert('edit');
+                        } else if(item.type === 'delete') {
+                            alert('delete')
+                        }
+                    }}
+                  );
                 $('#customers-table').append(tr);
+                    break;
+                case 'edit':
+                    alert('edit');
+                    break;
+                case 'delete':
+                        var element = $('#' + data.key);
+                        $(element)
+                            .addClass("alert-warning")
+                            .fadeOut("400",() => {
+                            $(element).remove();
+                        })
+                    break    
+                default:
+                    break;
             }
-
         },
 
         // TODO check if local storage has available size
@@ -149,10 +179,40 @@ $(document).ready(function(){
         },
 
         showCustomersTable: function (customers) {
-            var customersTable = mycz.ele.table('','All Customers',['Company Name','Customer Name'],customers,{'id':'customers-table'});
+            var customersTable = mycz.ele.table('',true,
+                    'All Customers',
+                    ['Company Name','Customer Name'],
+                    customers,
+                    {'edit':true,'delete':true,'callback': function (item) {
+                        if(item.type === 'edit') {
+                            
+                        } else if(item.type === 'delete') {
+                            steps.deleteCustomer(item.data, function () {
+                                steps.updateCustomersTable(item.data,'delete');
+                            });
+                        }
+                    }},
+                    {'id':'customers-table'});
             var div = mycz.ele.new('div','','customers-table','');
             div.append(customersTable);
             $('.main').append(div);
+        },
+
+        deleteCustomer: function (customer,callback) {
+          if(!mycz.helpers.isset(customer,true,true)) return;
+          
+          var data = mycz.storage.get('customers');
+          data = JSON.parse(data);
+          var index = data.findIndex( i => i.key === customer.key);
+          if(index<0) return;
+          var result = mycz.helpers.array.removeByIndex(data,index);
+          try {
+            // mycz.storage.set('customers',JSON.stringify(result));
+            if(mycz.helpers.isFunction(callback))
+            callback(result);
+          } catch (error) {
+             console.log(error); 
+          }
         }
     };
 

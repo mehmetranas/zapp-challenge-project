@@ -518,28 +518,36 @@ mycz.ele.select = function(name,values,title,width,args_override,changeFunc,filt
  * Create a table
  * @param classes 
  * @param thead boolen
+ * @param caption string, table caption
  * @param headRowEls array of head row titles
  * @param data array of data objects
+ * @param buttons object, allowed buttons and action callback (edit,delete,callback)
  */
 // TODO add tooltips by tooltip plugin
-mycz.ele.table = function (classes,thead,headRowEls,data,attributes) {
+mycz.ele.table = function (classes,thead,caption,headRowEls,data,buttons,attributes,callback) {
   var table = $('<table />');
-  if(mycz.helpers.isset(classes)){
+  buttons = mycz.helpers.isset(buttons, true, true) ? buttons : {};
+  if(mycz.helpers.isset(classes,true,true)){
       table.attr("class",classes);
   }
 
-  if(mycz.helpers.isset(attributes)){
+  if(mycz.helpers.isset(attributes,true,true)){
     $.each(attributes,function(key,v){
         table.attr(key,v);
     })
-}
+  }
 
-  if(mycz.helpers.isset(thead)){
-      thead = $('<thead>')
+  if(mycz.helpers.isset(caption,true,true)){
+    var cp = $('<caption>').html(caption);
+    table.append(cp);
+  }
+
+  if(mycz.helpers.isset(thead,true,true)){
+      thead = $('<thead>');
       table.append(thead);
   }
 
-  if(mycz.helpers.isset(headRowEls)) {
+  if(mycz.helpers.isset(headRowEls,true,true)) {
     var headRow = $('<tr>');
     headRowEls.forEach(function(el) {
       var th = $('<th>', {
@@ -549,15 +557,11 @@ mycz.ele.table = function (classes,thead,headRowEls,data,attributes) {
     });
     thead.append(headRow);
   }
-  table.append(thead);
+
   data.forEach(item => {
-  var tr = $('<tr>').append(
-      $('<td>').text(item.company_name),
-      $('<td>').text(item.customer_name),
-      $('<td>').text(item.key)
-    ); 
-    table.append(tr)
-  });
+      var tr = mycz.ele.tr('',item,buttons);
+      table.append(tr);
+    });
 
   return table;
 }
@@ -566,22 +570,68 @@ mycz.ele.table = function (classes,thead,headRowEls,data,attributes) {
  * Create a table row
  * @param classes 
  * @param data array of data objects
+ * @param buttons object, allowed buttons (edit,delete) 
  */
 // TODO add tooltips by tooltip plugin
-mycz.ele.tr = function (classes,data) {
-    var tr = $('<tr />');
+mycz.ele.tr = function (classes,data,buttons) {
+    var tr = $('<tr />'), 
+        editButton,
+        deleteButton,
+        callback = mycz.helpers.isFunction(buttons.callback) 
+            ? buttons.callback : false;
+
     if(mycz.helpers.isset(classes)){
         tr.attr("class",classes);
     }
-
-    for (const prop in data) {
-        if (data.hasOwnProperty(prop)) {
-            const text = data[prop];
-            tr.append(
-                $('<td>').text(text),
-              ); 
-        }
-    }
   
-    return tr;
+   if(mycz.helpers.isset(buttons.edit,true,true)) {
+    editButton = mycz.ele.btn('',
+    mycz.ele.icon('ion-edit','',''),
+    function () {
+        var result = {
+            type:'edit',
+            data: {}
+        };
+        $(this).closest('tr').find('td').each(function() {
+            var prop = $(this).attr('name');
+            var value = $(this).text();
+            if (!mycz.helpers.isset(prop)) return;
+            result.data[prop] = value;
+        });
+        if(callback)
+        callback(result);
+    },{"id":"edit-button","type":"edit"}); 
+   }
+
+   if(mycz.helpers.isset(buttons.delete,true,true)) {
+       deleteButton = mycz.ele.btn('',
+       mycz.ele.icon('ion-android-delete','',''),
+       function () {        
+           var result = {
+           type:'delete',
+           data: {}
+        };
+        $(this).closest('tr').find('td').each(function() {
+            var prop = $(this).attr('name');
+           var value = $(this).text();
+           if (!mycz.helpers.isset(prop)) return;
+           result.data[prop] = value;
+        });
+
+        if(callback)
+        callback(result)
+    },{"id":"delete-button","type":"delete"});
+   }
+       
+   tr.append(
+       $('<td>').attr('name','company_name').text(data.company_name),
+       $('<td>').attr('name','customer_name').text(data.customer_name),
+       $('<td>').attr({'name':'key','id':data.key}).text(data.key),
+       $('<td>').append(editButton),
+       $('<td>').append(deleteButton)
+       );
+       if(mycz.helpers.isset(data.key,true,true)){
+        tr.attr('id',data.key);
+      }    
+   return tr;
   }
