@@ -513,3 +513,54 @@ mycz.ele.select = function(name,values,title,width,args_override,changeFunc,filt
 
     return select;
 };
+
+/**
+ * Create a table
+ * @param classes 
+ * @param thead boolen
+ * @param headRowEls array of head row titles
+ * @param data array of data objects
+ */
+// TODO add tooltips by tooltip plugin
+mycz.ele.table = function (classes,thead,headRowEls,data) {console.log(data);
+  var table = $('<table />');
+  if(mycz.helpers.isset(classes)){
+      table.attr("class",classes);
+  }
+  // var table = document.createElement("table");
+  if(mycz.helpers.isset(thead)){
+      var thead = document.createElement("thead");
+  }
+  data.forEach(item => {
+  var tr = $('<tr>').append(
+      $('<td>').text(item.company_name),
+      $('<td>').text(item.customer_name),
+      $('<td>').text(item.key)
+    ); 
+    table.append(tr)
+  });
+
+//   var tbody = document.createElement("tbody");
+
+//   if(mycz.helpers.isset(headRowEls)) {
+//     var headRow = document.createElement("tr");
+//     headRowEls.forEach(function(el) {
+//       var th = document.createElement("th");
+//       th.appendChild(document.createTextNode(el));
+//       headRow.appendChild(th);
+//     });
+//     thead.appendChild(headRow);
+//   }
+//   table.appendChild(thead);
+//   data.forEach(function(el) {
+//     var tr = document.createElement("tr");
+//     for (var o in el) {
+//       var td = document.createElement("td");
+//       td.appendChild(document.createTextNode(el[o]))
+//       tr.appendChild(td);
+//     }
+//     tbody.appendChild(tr);
+//   });
+//   table.appendChild(tbody);
+  return table;
+}

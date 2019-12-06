@@ -32,9 +32,8 @@ $(document).ready(function(){
          * Creating the sidebar
          * @param callback function - If passed, will be triggered after sidebar is rendered
          */
+        // TODO make visible on mobile
         createSidebar: function(callback){
-    
-
             // create sidebar div
             // TODO fix sidebar on wide screen
             var sidebar = mycz.ele.div('sidenav bg-f8','','');
@@ -59,10 +58,16 @@ $(document).ready(function(){
          *
          * @param entries array - An array of entries
          */
-        createHeader: function(entries){console.log("creating label");
-            // create sidebar label
-            var label = mycz.ele.label('100%',"Customer Process",'','z-index-2 bg-f3 f-22 text-center','')
+        createHeader: function(callback){
+            var label = mycz.ele.label('100%',"Customer Process",'','bg-f3 f-22 center-items text-center','')
             container.append(label);
+        },
+
+        // create main div
+        createMain: function (callback) {
+            var main = mycz.ele.new('div','','main','');
+            container.append(main);
+            callback();
         },
         
         // TODO add validation
@@ -119,14 +124,32 @@ $(document).ready(function(){
         // TODO add success message after saving
         saveToLocalStorage: function (data) {
             var key = random.productKey();
-            mycz.storage.set(key,data); 
-        }
+            data.key = key;
+            var storegeData = mycz.storage.get('customers');
+            var customers = mycz.helpers.isset(storegeData,true,true) ? JSON.parse(storegeData) : [];
+            customers.push(data);
+            mycz.storage.set("customers",JSON.stringify(customers));
+        },
 
+        getCustomers: function (params) {
+          return JSON.parse(mycz.storage.get('customers'));
+        },
+
+        showCustomersTable: function (customers) {
+            var customersTable = mycz.ele.table('','All Customers',['Company Name','Customer Name'],customers);
+            var div = mycz.ele.new('div','','customers-table','');
+            div.append(customersTable);
+            $('.main').append(div);
+        }
     };
 
     steps.createSidebar(function(){
         steps.createHeader();
     });
+    steps.createMain(function () {
+        var customers = steps.getCustomers();
+        steps.showCustomersTable(customers);
+    })
 
 });
 

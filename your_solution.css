@@ -13,9 +13,21 @@
   }
   
   .main {
-    margin-left: 160px; /* Same as the width of the sidenav */
-    font-size: 28px; /* Increased text to enable scrolling */
+    font-size: 15px; /* Increased text to enable scrolling */
     padding: 0px 10px;
+    margin-left: 160px;
+    overflow: auto;
+  }
+
+  .center-items {
+    display: flex !important;
+    align-items: center;
+    justify-items: center;
+  }
+
+  .customers-table {
+    margin-top: 50px;
+    margin-left: 50px;
   }
 
   
