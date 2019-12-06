@@ -42,6 +42,7 @@ $(document).ready(function(){
             // TODO add success button
             var callback_new_customer = (form,data) => {
                 steps.saveToLocalStorage(data);
+                steps.updateCustomersTable(data,true);
                 form.close()
             }
             var customer_add = mycz.ele.btn(
@@ -120,6 +121,18 @@ $(document).ready(function(){
 
         },
 
+        updateCustomersTable: function (data,isNewRecord) {
+            var checkData = mycz.helpers.isset(data,true,true);
+            if(!checkData) return;
+
+            isNewRecord = mycz.helpers.isset(isNewRecord,true,true);
+            if(isNewRecord) {
+                var tr = mycz.ele.tr('',data);
+                $('#customers-table').append(tr);
+            }
+
+        },
+
         // TODO check if local storage has available size
         // TODO add success message after saving
         saveToLocalStorage: function (data) {
@@ -136,7 +149,7 @@ $(document).ready(function(){
         },
 
         showCustomersTable: function (customers) {
-            var customersTable = mycz.ele.table('','All Customers',['Company Name','Customer Name'],customers);
+            var customersTable = mycz.ele.table('','All Customers',['Company Name','Customer Name'],customers,{'id':'customers-table'});
             var div = mycz.ele.new('div','','customers-table','');
             div.append(customersTable);
             $('.main').append(div);

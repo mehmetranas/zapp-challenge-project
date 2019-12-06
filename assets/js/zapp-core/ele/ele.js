@@ -522,15 +522,34 @@ mycz.ele.select = function(name,values,title,width,args_override,changeFunc,filt
  * @param data array of data objects
  */
 // TODO add tooltips by tooltip plugin
-mycz.ele.table = function (classes,thead,headRowEls,data) {console.log(data);
+mycz.ele.table = function (classes,thead,headRowEls,data,attributes) {
   var table = $('<table />');
   if(mycz.helpers.isset(classes)){
       table.attr("class",classes);
   }
-  // var table = document.createElement("table");
+
+  if(mycz.helpers.isset(attributes)){
+    $.each(attributes,function(key,v){
+        table.attr(key,v);
+    })
+}
+
   if(mycz.helpers.isset(thead)){
-      var thead = document.createElement("thead");
+      thead = $('<thead>')
+      table.append(thead);
   }
+
+  if(mycz.helpers.isset(headRowEls)) {
+    var headRow = $('<tr>');
+    headRowEls.forEach(function(el) {
+      var th = $('<th>', {
+          text: el
+      })
+      headRow.append(th);
+    });
+    thead.append(headRow);
+  }
+  table.append(thead);
   data.forEach(item => {
   var tr = $('<tr>').append(
       $('<td>').text(item.company_name),
@@ -540,27 +559,29 @@ mycz.ele.table = function (classes,thead,headRowEls,data) {console.log(data);
     table.append(tr)
   });
 
-//   var tbody = document.createElement("tbody");
-
-//   if(mycz.helpers.isset(headRowEls)) {
-//     var headRow = document.createElement("tr");
-//     headRowEls.forEach(function(el) {
-//       var th = document.createElement("th");
-//       th.appendChild(document.createTextNode(el));
-//       headRow.appendChild(th);
-//     });
-//     thead.appendChild(headRow);
-//   }
-//   table.appendChild(thead);
-//   data.forEach(function(el) {
-//     var tr = document.createElement("tr");
-//     for (var o in el) {
-//       var td = document.createElement("td");
-//       td.appendChild(document.createTextNode(el[o]))
-//       tr.appendChild(td);
-//     }
-//     tbody.appendChild(tr);
-//   });
-//   table.appendChild(tbody);
   return table;
 }
+
+/**
+ * Create a table row
+ * @param classes 
+ * @param data array of data objects
+ */
+// TODO add tooltips by tooltip plugin
+mycz.ele.tr = function (classes,data) {
+    var tr = $('<tr />');
+    if(mycz.helpers.isset(classes)){
+        tr.attr("class",classes);
+    }
+
+    for (const prop in data) {
+        if (data.hasOwnProperty(prop)) {
+            const text = data[prop];
+            tr.append(
+                $('<td>').text(text),
+              ); 
+        }
+    }
+  
+    return tr;
+  }
