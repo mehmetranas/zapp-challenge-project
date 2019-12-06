@@ -734,7 +734,7 @@ mycz.modal = {
             content.append(mycz.ele.div('col-md-3 text-center',mycz.ele.icon(icon+" f-80")));
             content.append(mycz.ele.div('col-md-9',text));
             var m = mycz.modal.new(title,content,true,[
-                mycz.ele.btn('button-dark',label("close"),function(){
+                mycz.ele.btn('button-dark',label("close"),function(){console.log("m",m);
                     mycz.modal.close(m);
                 })
             ],'',{

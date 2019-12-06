@@ -36,11 +36,14 @@ $(document).ready(function(){
     
 
             // create sidebar div
+            // TODO fix sidebar on wide screen
             var sidebar = mycz.ele.div('sidenav bg-f8','','');
 
             // create add customer button 
-            var callback_new_customer = (data) => {console.log(data);
+            // TODO add success button
+            var callback_new_customer = (form,data) => {
                 steps.saveToLocalStorage(data);
+                form.close()
             }
             var customer_add = mycz.ele.btn(
                 'zapp-btn w-100 m-top-40',mycz.ele.icon('ion-person-add','','') +
@@ -61,7 +64,8 @@ $(document).ready(function(){
             var label = mycz.ele.label('100%',"Customer Process",'','z-index-2 bg-f3 f-22 text-center','')
             container.append(label);
         },
-
+        
+        // TODO add validation
         newCustomer: function(editData,callback){
 
             editData = mycz.helpers.isset(editData,true,true) ? editData : '';
@@ -102,7 +106,7 @@ $(document).ready(function(){
             var f = new mycz.form('New Customer',cols,editData,'',function(data){
 
                 if(mycz.helpers.isset(callback,true,true)){
-                    callback(data);
+                    callback(f,data);
                 }
 
             },isEdit);
@@ -114,7 +118,8 @@ $(document).ready(function(){
         // TODO check if local storage has available size
         // TODO add success message after saving
         saveToLocalStorage: function (data) {
-           mycz.storage.set(data.company_name,data.customer_name); 
+            var key = random.productKey();
+            mycz.storage.set(key,data); 
         }
 
     };
