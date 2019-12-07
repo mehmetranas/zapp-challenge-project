@@ -214,8 +214,12 @@ $(document).ready(function(){
             mycz.storage.set("customers",JSON.stringify(customers));
         },
 
-        getCustomers: function (params) {
-          return JSON.parse(mycz.storage.get('customers'));
+        getCustomers: function () {
+            var customers = mycz.storage.get('customers');
+            if(!mycz.helpers.isset(customers,true,true))
+                return null
+            else
+                return JSON.parse(customers);
         },
 
         showCustomersTable: function (customers) {
@@ -253,7 +257,10 @@ $(document).ready(function(){
     });
     steps.createMain(function () {
         var customers = steps.getCustomers();
-        steps.showCustomersTable(customers);
+        if(!mycz.helpers.isset(customers,true,true))
+            alert('There is not any data to show')
+        else
+            steps.showCustomersTable(customers);
     })
 
 });
