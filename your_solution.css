@@ -1,4 +1,7 @@
-
+html,
+body {
+  height: 100%;
+}
 /* Sidenav */
 
 .sidenav {
@@ -30,4 +33,17 @@
     margin-left: 50px;
   }
 
+  /* Message div */
+.my-alert-main {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.my-alert-message {
+  height: 45vh;
+  width: 45vh;
+}
   

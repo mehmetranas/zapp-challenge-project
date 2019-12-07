@@ -28,6 +28,37 @@ $(document).ready(function(){
 
     // Your code goes here.
 
+    checkDataIsEmptyOrNot = function () {
+        var customers = steps.getCustomers();console.log(customers);
+        var messageDiv = $(".my-alert-main");
+        var main = $('.main');
+        if(!mycz.helpers.isArray(customers) || customers.length <= 0) {
+            if(mycz.helpers.isset(main,true,true)){
+                main.hide();
+                messageDiv.show()
+                // steps.renderTable()
+            }
+        }else {
+            var messageDiv = $(".my-alert-main");
+            if(mycz.helpers.isset(messageDiv,true,true)){console.log("check",messageDiv);
+                messageDiv.hide();
+                main.show()
+                // steps.renderTable()
+            }
+        }
+    }
+
+    // Show a message in main div and prevent to render customer table
+    var emptyDataMessage = function () {
+        var messageMainDiv = mycz.ele.div('my-alert-main','',{});
+        var messageDiv =  mycz.ele.div('my-alert-message','',{});
+        var message =  mycz.ele.new('h4','There is not any record','color-dark',{});
+        messageDiv.append(message);
+        messageMainDiv.append(messageDiv);
+        container.append(messageMainDiv)
+    
+    };
+
     // return an empty array if there is not any valdation errors
     var checkFormData = function (data) {
         var customerNameValidationMessage = mycz.helpers.isset(data.customer_name.trim(),true,true) ? false : "Customer Name";
@@ -139,7 +170,7 @@ $(document).ready(function(){
             }
 
             var f = new mycz.form('New Customer',cols,editData,'',function(data){
-
+                //TODO show validation message in model
                 var validationMessages = checkFormData(data);
                 if(validationMessages.length > 0) {
                     var validationText = "Please fill these required fields";
@@ -177,15 +208,15 @@ $(document).ready(function(){
 
             switch (actionType) {
                 case 'add':
-                    var tr = mycz.ele.tr('',data,buttonsCallback());
-                tr.css({'opacity':'0'});
-                tr.addClass('alert-success');
-                $('#customers-table').append(tr);
-                tr.animate({
-                    opacity: 1
-                }, 800, () => {
-                   setTimeout(() => tr.removeClass("alert-success"),2300)
-                })
+                  var tr = mycz.table.tr('',data,buttonsCallback());
+                  tr.css({'opacity':'0'});
+                  tr.addClass('alert-success');
+                  $('#customers-table').append(tr);
+                  tr.animate({
+                      opacity: 1
+                  }, 800, () => {
+                     setTimeout(() => tr.removeClass("alert-success"),2300)
+                  })
                     break;
                 case 'edit':
                     alert('edit');
@@ -201,6 +232,8 @@ $(document).ready(function(){
                 default:
                     break;
             }
+
+            checkDataIsEmptyOrNot();
         },
 
         // TODO check if local storage has available size
@@ -223,7 +256,7 @@ $(document).ready(function(){
         },
 
         showCustomersTable: function (customers) {
-            var customersTable = mycz.ele.table('',true,
+            var customersTable = mycz.table.new('',true,
                     'All Customers',
                     ['Company Name','Customer Name'],
                     customers,
@@ -249,20 +282,20 @@ $(document).ready(function(){
           } catch (error) {
              console.log(error); 
           }
+        },
+
+        renderTable: function () {
+            var customers = steps.getCustomers();
+                steps.createMain(function () {
+                    emptyDataMessage()
+                    steps.showCustomersTable(customers);
+                    checkDataIsEmptyOrNot();
+                })
         }
     };
 
     steps.createSidebar(function(){
         steps.createHeader();
     });
-    steps.createMain(function () {
-        var customers = steps.getCustomers();
-        if(!mycz.helpers.isset(customers,true,true))
-            alert('There is not any data to show')
-        else
-            steps.showCustomersTable(customers);
-    })
-
+    steps.renderTable();
 });
-
-
