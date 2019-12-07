@@ -29,21 +29,19 @@ $(document).ready(function(){
     // Your code goes here.
 
     checkDataIsEmptyOrNot = function () {
-        var customers = steps.getCustomers();console.log(customers);
+        var customers = getCustomers();
         var messageDiv = $(".my-alert-main");
         var main = $('.main');
         if(!mycz.helpers.isArray(customers) || customers.length <= 0) {
             if(mycz.helpers.isset(main,true,true)){
                 main.hide();
                 messageDiv.show()
-                // steps.renderTable()
             }
         }else {
             var messageDiv = $(".my-alert-main");
-            if(mycz.helpers.isset(messageDiv,true,true)){console.log("check",messageDiv);
+            if(mycz.helpers.isset(messageDiv,true,true)){
                 messageDiv.hide();
                 main.show()
-                // steps.renderTable()
             }
         }
     }
@@ -61,9 +59,9 @@ $(document).ready(function(){
 
     // return an empty array if there is not any valdation errors
     var checkFormData = function (data) {
+        var messages = [];
         var customerNameValidationMessage = mycz.helpers.isset(data.customer_name.trim(),true,true) ? false : "Customer Name";
         var companyNameValidationMessage = mycz.helpers.isset(data.company_name.trim(),true,true) ? false : "Company Name";
-        var messages = [];
         if(customerNameValidationMessage) {
             messages.push(customerNameValidationMessage)
         };
@@ -73,17 +71,59 @@ $(document).ready(function(){
         return messages;
     }
 
-    // Buttons option in new record for table
+    // Buttons option for table
     var buttonsCallback = function () {
-        return {'edit':true,'delete':true,'callback': function (item) {
-            if(item.type === 'edit') {
-                
-            } else if(item.type === 'delete') {
-                steps.deleteCustomer(item.data, function () {
-                    steps.updateCustomersTable(item.data,'delete');
-                });
+        return {'edit':true,
+                'delete':true,
+                'callback': function (item) {
+                    if(item.type === 'edit') {
+                        steps.newCustomer(item.data,saveOrUpdateCustomer)
+                    } else if(item.type === 'delete') {
+                        steps.deleteCustomer(item.data, function () {
+                            steps.updateCustomersTable(item.data,'delete');
+                        });
+                    }
             }
-        }}
+        }
+    };
+
+    var saveOrUpdateCustomer = function (form,customer) {
+            var isEdit = mycz.helpers.isset(customer.key) ? true : false;
+            upadateOrSaveLocalStorage(customer,isEdit,form);
+            // steps.updateCustomersTable(customer,'add');
+        }
+
+    // TODO check if local storage has available size
+    // TODO add success message after save or update
+    upadateOrSaveLocalStorage = function (data,isEdit,form) {
+        var actionType = isEdit ? 'edit' : 'add';
+        var storegeData = mycz.storage.get('customers');
+        var customers = mycz.helpers.isset(storegeData,true,true) ? JSON.parse(storegeData) : [];
+        if(isEdit) {
+            var index = customers.findIndex((c) => c.key === data.key);
+            if(index < 0) return;
+            customers[index] = data;
+        } else{
+            var key = random.productKey();
+            data.key = key;
+            customers.push(data);
+        }
+        try {
+            mycz.storage.set("customers",JSON.stringify(customers));
+            form.close();
+            steps.updateCustomersTable(data,actionType)
+        } catch (error) {
+            console.log(error);
+            alert('Opps! Something went wrong \n Please try again later')            
+        }
+    };
+
+    getCustomers = function () {
+        var customers = mycz.storage.get('customers');
+        if(!mycz.helpers.isset(customers,true,true))
+            return null
+        else
+            return JSON.parse(customers);
     };
 
     var steps = {
@@ -98,17 +138,10 @@ $(document).ready(function(){
             // TODO fix sidebar on wide screen
             var sidebar = mycz.ele.div('sidenav bg-f8','','');
 
-            // create add customer button 
-            // TODO add success button
-            var callback_new_customer = (form,data) => {
-                steps.saveToLocalStorage(data);
-                steps.updateCustomersTable(data,'add');
-                form.close()
-            }
             var customer_add = mycz.ele.btn(
                 'zapp-btn w-100 m-top-40',mycz.ele.icon('ion-person-add','','') +
                 ' Add Customer',
-                function(){steps.newCustomer(null,callback_new_customer)},
+                function(){steps.newCustomer(null,saveOrUpdateCustomer)},
                 '');
             sidebar.append(customer_add);
             container.append(sidebar);
@@ -169,7 +202,7 @@ $(document).ready(function(){
                 }
             }
 
-            var f = new mycz.form('New Customer',cols,editData,'',function(data){
+            var f = new mycz.form(isEdit ? 'Update Customer':'New Customer',cols,editData,'',function(data){
                 //TODO show validation message in model
                 var validationMessages = checkFormData(data);
                 if(validationMessages.length > 0) {
@@ -179,6 +212,7 @@ $(document).ready(function(){
                     });
                     alert(validationText)
                 } else {
+                    if(isEdit) data.key = editData.key
                     if(mycz.helpers.isset(callback,true,true)){
                         for (const key in data) {
                             if (data.hasOwnProperty(key)) {
@@ -214,12 +248,20 @@ $(document).ready(function(){
                   $('#customers-table').append(tr);
                   tr.animate({
                       opacity: 1
-                  }, 800, () => {
+                  }, 900, () => {
                      setTimeout(() => tr.removeClass("alert-success"),2300)
                   })
                     break;
                 case 'edit':
-                    alert('edit');
+                        var tr = mycz.table.tr('',data,buttonsCallback());
+                        tr.css({'opacity':'0'});
+                        tr.addClass('info');
+                        $('#' + data.key).replaceWith(tr)
+                        tr.animate({
+                            opacity: 1
+                        }, 900, () => {
+                           setTimeout(() => tr.removeClass("info"),2300)
+                        })
                     break;
                 case 'delete':
                         var element = $('#' + data.key);
@@ -232,28 +274,9 @@ $(document).ready(function(){
                 default:
                     break;
             }
-
             checkDataIsEmptyOrNot();
         },
 
-        // TODO check if local storage has available size
-        // TODO add success message after saving
-        saveToLocalStorage: function (data) {
-            var key = random.productKey();
-            data.key = key;
-            var storegeData = mycz.storage.get('customers');
-            var customers = mycz.helpers.isset(storegeData,true,true) ? JSON.parse(storegeData) : [];
-            customers.push(data);
-            mycz.storage.set("customers",JSON.stringify(customers));
-        },
-
-        getCustomers: function () {
-            var customers = mycz.storage.get('customers');
-            if(!mycz.helpers.isset(customers,true,true))
-                return null
-            else
-                return JSON.parse(customers);
-        },
 
         showCustomersTable: function (customers) {
             var customersTable = mycz.table.new('',true,
@@ -285,7 +308,7 @@ $(document).ready(function(){
         },
 
         renderTable: function () {
-            var customers = steps.getCustomers();
+            var customers = getCustomers();
                 steps.createMain(function () {
                     emptyDataMessage()
                     steps.showCustomersTable(customers);
