@@ -42,6 +42,19 @@ $(document).ready(function(){
         return messages;
     }
 
+    // Buttons option in new record for table
+    var buttonsCallback = function () {
+        return {'edit':true,'delete':true,'callback': function (item) {
+            if(item.type === 'edit') {
+                
+            } else if(item.type === 'delete') {
+                steps.deleteCustomer(item.data, function () {
+                    steps.updateCustomersTable(item.data,'delete');
+                });
+            }
+        }}
+    };
+
     var steps = {
 
         /**
@@ -156,7 +169,7 @@ $(document).ready(function(){
          * @param data object, new data for table or delteing data for update table
          * @param actionType action type for table refresh for new record or editing table etc. (edit,delete,add) 
          */
-        updateCustomersTable: function (data,actionType) {console.log(data);
+        updateCustomersTable: function (data,actionType) {
             if(!mycz.helpers.isset(actionType,true,true)) return;
 
             var checkData = mycz.helpers.isset(data,true,true);
@@ -164,15 +177,7 @@ $(document).ready(function(){
 
             switch (actionType) {
                 case 'add':
-                    var tr = mycz.ele.tr('',data,
-                    {'edit':true,'delete':true,'callback': function (item) {
-                        if(item.type === 'edit') {
-                            alert('edit');
-                        } else if(item.type === 'delete') {
-                            alert('delete')
-                        }
-                    }}
-                  );
+                    var tr = mycz.ele.tr('',data,buttonsCallback());
                 tr.css({'opacity':'0'});
                 tr.addClass('alert-success');
                 $('#customers-table').append(tr);
@@ -218,15 +223,7 @@ $(document).ready(function(){
                     'All Customers',
                     ['Company Name','Customer Name'],
                     customers,
-                    {'edit':true,'delete':true,'callback': function (item) {
-                        if(item.type === 'edit') {
-                            
-                        } else if(item.type === 'delete') {
-                            steps.deleteCustomer(item.data, function () {
-                                steps.updateCustomersTable(item.data,'delete');
-                            });
-                        }
-                    }},
+                    buttonsCallback(),
                     {'id':'customers-table'});
             var div = mycz.ele.new('div','','customers-table','');
             div.append(customersTable);
