@@ -28,6 +28,20 @@ $(document).ready(function(){
 
     // Your code goes here.
 
+    // return an empty array if there is not any valdation errors
+    var checkFormData = function (data) {
+        var customerNameValidationMessage = mycz.helpers.isset(data.customer_name.trim(),true,true) ? false : "Customer Name";
+        var companyNameValidationMessage = mycz.helpers.isset(data.company_name.trim(),true,true) ? false : "Company Name";
+        var messages = [];
+        if(customerNameValidationMessage) {
+            messages.push(customerNameValidationMessage)
+        };
+        if(companyNameValidationMessage) {
+            messages.push(companyNameValidationMessage)
+        }
+        return messages;
+    }
+
     var steps = {
 
         /**
@@ -44,7 +58,7 @@ $(document).ready(function(){
             // TODO add success button
             var callback_new_customer = (form,data) => {
                 steps.saveToLocalStorage(data);
-                steps.updateCustomersTable(data,true);
+                steps.updateCustomersTable(data,'add');
                 form.close()
             }
             var customer_add = mycz.ele.btn(
@@ -72,12 +86,12 @@ $(document).ready(function(){
             container.append(main);
             callback();
         },
-        
+         
         // TODO add validation
         newCustomer: function(editData,callback){
 
             editData = mycz.helpers.isset(editData,true,true) ? editData : '';
-            var isEdit = mycz.helpers.isset(editData,true,true);console.log("is edişt: ",isEdit);
+            var isEdit = mycz.helpers.isset(editData,true,true);
             var cols = {
 
                 /**
@@ -113,8 +127,22 @@ $(document).ready(function(){
 
             var f = new mycz.form('New Customer',cols,editData,'',function(data){
 
-                if(mycz.helpers.isset(callback,true,true)){
-                    callback(f,data);
+                var validationMessages = checkFormData(data);
+                if(validationMessages.length > 0) {
+                    var validationText = "Please fill these required fields";
+                    validationMessages.forEach(t => {
+                        validationText += "\n" + t 
+                    });
+                    alert(validationText)
+                } else {
+                    if(mycz.helpers.isset(callback,true,true)){
+                        for (const key in data) {
+                            if (data.hasOwnProperty(key)) {
+                                data[key] = data[key].trim(); // trim white space
+                            }
+                        }
+                        callback(f,data);
+                    }
                 }
 
             },isEdit);
@@ -145,7 +173,14 @@ $(document).ready(function(){
                         }
                     }}
                   );
+                tr.css({'opacity':'0'});
+                tr.addClass('alert-success');
                 $('#customers-table').append(tr);
+                tr.animate({
+                    opacity: 1
+                }, 800, () => {
+                   setTimeout(() => tr.removeClass("alert-success"),2300)
+                })
                     break;
                 case 'edit':
                     alert('edit');
@@ -207,7 +242,7 @@ $(document).ready(function(){
           if(index<0) return;
           var result = mycz.helpers.array.removeByIndex(data,index);
           try {
-            // mycz.storage.set('customers',JSON.stringify(result));
+            mycz.storage.set('customers',JSON.stringify(result));
             if(mycz.helpers.isFunction(callback))
             callback(result);
           } catch (error) {
