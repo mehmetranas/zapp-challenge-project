@@ -18,8 +18,10 @@ body {
     position: fixed;
     height: 100%;
     overflow: auto;
-    display: flex;
-    align-items: center;
+    display: none;
+    align-items: end;
+    padding-top: 10px;
+    flex-direction: column;
   }
   .sidenav a {
     display: block;
@@ -38,42 +40,42 @@ body {
     color: white;
   }
   div.main {
-    margin-left: 200px;
     padding: 1px 16px;
     height: 1000px;
   }
   .main {
-    margin-left: 200px;
     padding: 1px 16px;
     height: 1000px;
   }
 
-  @media screen and (max-width: 700px) {
-    .sidenav {
-      width: 100%;
-      height: auto;
-      position: relative;
+  @media only screen and (min-width: 1200px){
+    .main {
+      margin-left: 200px;
     }
-    .sidenav a {float: left;}
-    div.main {margin-left: 0;}
-  }
   
-  @media screen and (max-width: 400px) {
-    .sidenav a {
-      text-align: center;
-      float: none;
+    .sidenav {
+      width: calc(224px);
+      display: flex;
     }
   }
 
-  /* Header */
-  .header {
-    padding: 60px;
+  .slogan {
+    display: flex;
+    width: 100%;
+    min-width: 100%;
+    align-items: center;
     text-align: center;
-    background: #1abc9c;
-    color: white;
-    font-size: 30px;
+    padding: 20px;
   }
-  
+
+  /* Header */
+.header {
+  padding: 60px;
+  text-align: center;
+  background: #1abc9c;
+  color: white;
+  font-size: 30px;
+}
 
   /* Message div */
 .my-alert-main {

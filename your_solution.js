@@ -137,12 +137,13 @@ $(document).ready(function(){
             // create sidebar div
             // TODO fix sidebar on wide screen
             var sidebar = mycz.ele.div('sidenav button-new-dark bg-f8','','');
-
+            var slogan = mycz.ele.div('slogan','Customize Your Customers Easily...','')
             var customer_add = mycz.ele.btn(
                 'button-dark',mycz.ele.icon('ion-person-add','','') +
                 ' Add Customer',
                 function(){steps.newCustomer(null,saveOrUpdateCustomer)},
                 '');
+            sidebar.append(slogan);
             sidebar.append(customer_add);
             container.append(sidebar);
             callback();
