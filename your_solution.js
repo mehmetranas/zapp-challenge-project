@@ -1,6 +1,3 @@
-//TODO  add validation for delete record
-
-
 // Fix for reduced zappter-core
 window.languages = {
     activeLang: 'en'
@@ -88,9 +85,13 @@ $(document).ready(function(){
                     if(item.type === 'edit') {
                         steps.newCustomer(item.data,saveOrUpdateCustomer)
                     } else if(item.type === 'delete') {
-                        steps.deleteCustomer(item.data, function () {
-                            steps.updateCustomersTable(item.data,'delete');
+                        var model = mycz.modal.templates.are_you_sure(() => {
+                            steps.deleteCustomer(item.data, function () {
+                                steps.updateCustomersTable(item.data,'delete');
+                            });
+                            model.close();
                         });
+
                     }
             }
         }
@@ -102,7 +103,6 @@ $(document).ready(function(){
         }
 
     // TODO check if local storage has available size
-    // TODO add success message after save or update
     upadateOrSaveLocalStorage = function (data,isEdit,form) {
         var actionType = isEdit ? 'edit' : 'add';
         var storegeData = mycz.storage.get('customers');
@@ -122,7 +122,8 @@ $(document).ready(function(){
             steps.updateCustomersTable(data,actionType)
         } catch (error) {
             console.log(error);
-            alert('Opps! Something went wrong \n Please try again later')            
+            mycz.modal.templates.with_icon('Please fill requirements fields','','ion-android-alert')
+            
         }
     };
 
@@ -140,10 +141,8 @@ $(document).ready(function(){
          * Creating the sidebar
          * @param callback function - If passed, will be triggered after sidebar is rendered
          */
-        // TODO make visible on mobile
         createSidebar: function(callback){
             // create sidebar div
-            // TODO fix sidebar on wide screen
             var sidebar = mycz.ele.div('sidenav button-new-dark bg-f8','','');
             var closedButton = mycz.ele.btn('closed-button button-dark','X',collapsedMenu,{});
             var slogan = mycz.ele.div('slogan','Customize Your Customers Easily...','')
@@ -181,7 +180,6 @@ $(document).ready(function(){
             callback();
         },
          
-        // TODO add validation
         newCustomer: function(editData,callback){
 
             editData = mycz.helpers.isset(editData,true,true) ? editData : '';
@@ -220,14 +218,16 @@ $(document).ready(function(){
             }
 
             var f = new mycz.form(isEdit ? 'Update Customer':'New Customer',cols,editData,'',function(data){
-                //TODO show validation message in model
                 var validationMessages = checkFormData(data);
                 if(validationMessages.length > 0) {
-                    var validationText = "Please fill these required fields";
+                    var validationText = "";
                     validationMessages.forEach(t => {
-                        validationText += "\n" + t 
+                        validationText += t 
                     });
-                    alert(validationText)
+                    mycz.modal.templates.with_icon('Please fill these required fields',
+                                                    validationText,
+                                                    'ion-android-alert')
+
                 } else {
                     if(isEdit) data.key = editData.key
                     if(mycz.helpers.isset(callback,true,true)){

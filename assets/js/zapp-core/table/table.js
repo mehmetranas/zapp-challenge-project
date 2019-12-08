@@ -7,7 +7,6 @@ mycz.table = {
  * @param data array of data objects
  * @param buttons object, allowed buttons and action callback (edit,delete,callback)
  */
-// TODO add tooltips by tooltip plugin
   new: function (classes,caption,headRowEls,data,buttons,attributes,callback) {
     var table = $('<table />');
     buttons = mycz.helpers.isset(buttons, true, true) ? buttons : {};
@@ -54,7 +53,6 @@ mycz.table = {
  * @param buttons object, allowed buttons (edit,delete) 
  * @param attributes additional attributes 
  */
-// TODO add tooltips by tooltip plugin
 tr: function (classes,data,buttons,attributes) {
     var tr = $('<tr />'), 
         editButton,
