@@ -80,6 +80,12 @@ body {
     }
   }
 
+  @media all and (max-width: 699px) {
+    body {
+     background: rgb(141, 4, 4);
+   }
+ }
+
   .slogan {
     display: flex;
     width: 100%;
