@@ -51,9 +51,12 @@ body {
   }
 
   .closed-button {
+    position: absolute;
+    top: 0;
+    right: 0;
     display: block !important;
     align-self: flex-end;
-    width: 50px !important;
+    width: 100px !important;
   }
   
   .menu-button {
@@ -61,7 +64,7 @@ body {
     position: absolute;
     top: 0;
     right: 0;
-    width: 50px !important;
+    width: 100px !important;
   }
   
   @media only screen and (min-width: 1200px){
@@ -80,7 +83,19 @@ body {
     }
   }
 
-  @media screen and (max-width: 699px) {
+  @media screen and (max-device-width: 699px) {
+    .sidenav a {
+      font-size: 65px !important;
+    }
+    body,.zapp-btn  {
+      font-size: 45px;
+    }
+    .slogan {
+      padding: 100px !important;
+    }
+    .header {
+      font-size: 65px !important;
+    }
  }
 
   .slogan {

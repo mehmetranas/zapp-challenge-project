@@ -23,9 +23,9 @@ $(document).ready(function(){
 
     var container = $("body");
 
-
     // Your code goes here.
 
+    // Toggle sidenav on mobile
     collapsedMenu = function () {
         var display = $(".sidenav").css('display');
         if(display === 'none')
@@ -34,6 +34,7 @@ $(document).ready(function(){
             $(".sidenav").css('display',"none")
     }
 
+    // Check customer table if there is any records
     checkDataIsEmptyOrNot = function () {
         var customers = getCustomers();
         var messageDiv = $(".my-alert-main");
@@ -52,7 +53,7 @@ $(document).ready(function(){
         }
     }
 
-    // Show a message in main div and prevent to render customer table
+    // Show a message in main div and if no record then prevent to render customer table
     var emptyDataMessage = function () {
         var messageMainDiv = mycz.ele.div('my-alert-main','',{});
         var messageDiv =  mycz.ele.div('my-alert-message','',{});
@@ -63,7 +64,7 @@ $(document).ready(function(){
     
     };
 
-    // return an empty array if there is not any valdation errors
+    // return an empty array if there is not any valdation errors for customer form
     var checkFormData = function (data) {
         var messages = [];
         var customerNameValidationMessage = mycz.helpers.isset(data.customer_name.trim(),true,true) ? false : "Customer Name";
@@ -77,7 +78,7 @@ $(document).ready(function(){
         return messages;
     }
 
-    // Buttons option for table
+    // Buttons option for customer table
     var buttonsCallback = function () {
         return {'edit':true,
                 'delete':true,
@@ -127,6 +128,7 @@ $(document).ready(function(){
         }
     };
 
+    // Get customers list and parse json from lcal storage
     getCustomers = function () {
         var customers = mycz.storage.get('customers');
         if(!mycz.helpers.isset(customers,true,true))
@@ -144,8 +146,10 @@ $(document).ready(function(){
         createSidebar: function(callback){
             // create sidebar div
             var sidebar = mycz.ele.div('sidenav button-new-dark bg-f8','','');
+            // For mobile
             var closedButton = mycz.ele.btn('closed-button button-dark','X',collapsedMenu,{});
-            var slogan = mycz.ele.div('slogan','Customize Your Customers Easily...Oppsssssss','')
+            var slogan = mycz.ele.div('slogan','Customize Your Customers Easily...','')
+            // Callback for customer add button at sidenav
             var customer_add = mycz.ele.btn(
                 'button-dark',mycz.ele.icon('ion-person-add','','') +
                 ' Add Customer',
@@ -167,19 +171,21 @@ $(document).ready(function(){
          * @param entries array - An array of entries
          */
         createHeader: function(callback){
-            var header = mycz.ele.div('header button-blue','Customers','');
+            var header = mycz.ele.div('header button-blue',label('Customers'),'');
+            // For mobile
             var button = mycz.ele.btn('button-dark menu-button','☰',collapsedMenu,{});
             header.append(button);
             container.append(header);
         },
 
-        // create main div
+        // create main/content div
         createMain: function (callback) {
             var main = mycz.ele.new('div','','main','');
             container.append(main);
             callback();
         },
          
+        // Also run on edit customer
         newCustomer: function(editData,callback){
 
             editData = mycz.helpers.isset(editData,true,true) ? editData : '';
@@ -247,7 +253,7 @@ $(document).ready(function(){
         },
 
          /**
-         * Update table after any action
+         * Update table after any action (delete,edit,add)
          * @param data object, new data for table or delteing data for update table
          * @param actionType action type for table refresh for new record or editing table etc. (edit,delete,add) 
          */
@@ -293,7 +299,6 @@ $(document).ready(function(){
             }
             checkDataIsEmptyOrNot();
         },
-
 
         showCustomersTable: function (customers) {
             var customersTable = mycz.table.new('',

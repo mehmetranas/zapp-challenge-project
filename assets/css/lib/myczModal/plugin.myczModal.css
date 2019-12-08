@@ -13,7 +13,7 @@
     }
 
     body .myczModal .myczModal-header.myczModal-noSubtitle .myczModal-header-title {
-        font-size: 29px;
+        /* font-size: 29px; */
         font-family:'Open Sans',sans-serif;
         color: #6f6f6f;
     }

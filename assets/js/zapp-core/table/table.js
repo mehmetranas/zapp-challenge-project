@@ -7,7 +7,7 @@ mycz.table = {
  * @param data array of data objects
  * @param buttons object, allowed buttons and action callback (edit,delete,callback)
  */
-  new: function (classes,caption,headRowEls,data,buttons,attributes,callback) {
+  new: function (classes,caption,headRowEls,data,buttons,attributes) {
     var table = $('<table />');
     buttons = mycz.helpers.isset(buttons, true, true) ? buttons : {};
     if(mycz.helpers.isset(classes,true,true)){

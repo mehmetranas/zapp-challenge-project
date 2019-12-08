@@ -1,0 +1,32 @@
+// Fix for icon object. (There was not any icon object. But it has been used in many places. ex. form.js line 7372... So I've created an icon object to solve this problem) - your_solution.js line 17
+
+
+Hi thank you for give me a chance to develop this project. I have finished all stuffs. Below this section I have gived a  list of completed stuffs with some issues I faced on.
+
+# Details #
+
+1. Create a responsive sidebar and header - OK
+
+2. Extend the core with an own function mycz.table.. to pass objects or arrays, - OK
+and get a responsive table back.
+
+3. Use your new function and all the other core functions to display the table of
+customers. Use mycz.ele.btn and mycz.form to allow the user to enter a new customer. Write your code therefore in your_solution.js. - OK
+
+4. Make the table editable. - OK
+
+
+# Requirements #
+
+1. Only jQuery allowed to use (no other libraries) - OK
+
+2. No other html-files are allowed, no reload of the page is allowed, rerender the data as you think is the best solution for your customer - OK
+
+3. Responsive means: Works on Desktop + Mobile - OK ISSUE => index file not work on mobile properly. 
+    When I search the problem I found a method to solve this issue.(https://stackoverflow.com/questions/7859336/why-are-my-css3-media-queries-not-working)
+    But i did not solve the issue in order to do not modify index file.So the modal elements not responsible in mobile.
+
+4. Comment your code
+
+5. For better understanding, try to use the step-system (see example in your_solution.js) - OK 
+    (In fact, I didn't understand the step method and I didn't have time to understand it. I have applied the step method as far as I understand. But I think that's not what you want.)
