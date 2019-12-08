@@ -145,7 +145,7 @@ $(document).ready(function(){
             // create sidebar div
             var sidebar = mycz.ele.div('sidenav button-new-dark bg-f8','','');
             var closedButton = mycz.ele.btn('closed-button button-dark','X',collapsedMenu,{});
-            var slogan = mycz.ele.div('slogan','Customize Your Customers Easily...','')
+            var slogan = mycz.ele.div('slogan','Customize Your Customers Easily...Oppsssssss','')
             var customer_add = mycz.ele.btn(
                 'button-dark',mycz.ele.icon('ion-person-add','','') +
                 ' Add Customer',
