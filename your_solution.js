@@ -29,7 +29,7 @@ $(document).ready(function(){
 
     // Your code goes here.
 
-    collapsedMenu = function (params) {
+    collapsedMenu = function () {
         var display = $(".sidenav").css('display');
         if(display === 'none')
             $(".sidenav").css('display','flex');
@@ -150,7 +150,11 @@ $(document).ready(function(){
             var customer_add = mycz.ele.btn(
                 'button-dark',mycz.ele.icon('ion-person-add','','') +
                 ' Add Customer',
-                function(){steps.newCustomer(null,saveOrUpdateCustomer)},
+                function(){
+                    var isMobile = $('.closed-button').display === 'none' ? false : true;console.log(isMobile);
+                    if(isMobile) collapsedMenu(); 
+                    steps.newCustomer(null,saveOrUpdateCustomer)
+                },
                 '');
             sidebar.append(closedButton);
             sidebar.append(slogan);
