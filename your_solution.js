@@ -26,6 +26,7 @@ $(document).ready(function(){
 
     var container = $("body");
 
+
     // Your code goes here.
 
     checkDataIsEmptyOrNot = function () {
@@ -90,7 +91,6 @@ $(document).ready(function(){
     var saveOrUpdateCustomer = function (form,customer) {
             var isEdit = mycz.helpers.isset(customer.key) ? true : false;
             upadateOrSaveLocalStorage(customer,isEdit,form);
-            // steps.updateCustomersTable(customer,'add');
         }
 
     // TODO check if local storage has available size
@@ -136,10 +136,10 @@ $(document).ready(function(){
         createSidebar: function(callback){
             // create sidebar div
             // TODO fix sidebar on wide screen
-            var sidebar = mycz.ele.div('sidenav bg-f8','','');
+            var sidebar = mycz.ele.div('sidenav button-new-dark bg-f8','','');
 
             var customer_add = mycz.ele.btn(
-                'zapp-btn w-100 m-top-40',mycz.ele.icon('ion-person-add','','') +
+                'button-dark',mycz.ele.icon('ion-person-add','','') +
                 ' Add Customer',
                 function(){steps.newCustomer(null,saveOrUpdateCustomer)},
                 '');
@@ -153,8 +153,8 @@ $(document).ready(function(){
          * @param entries array - An array of entries
          */
         createHeader: function(callback){
-            var label = mycz.ele.label('100%',"Customer Process",'','bg-f3 f-22 center-items text-center','')
-            container.append(label);
+            var header = mycz.ele.div('header button-blue','Customers','');
+            container.append(header);
         },
 
         // create main div
@@ -244,23 +244,23 @@ $(document).ready(function(){
                 case 'add':
                   var tr = mycz.table.tr('',data,buttonsCallback());
                   tr.css({'opacity':'0'});
-                  tr.addClass('alert-success');
+                  tr.addClass('button-new-green');
                   $('#customers-table').append(tr);
                   tr.animate({
                       opacity: 1
                   }, 700, () => {
-                     setTimeout(() => tr.removeClass("alert-success"),2300)
+                     setTimeout(() => tr.removeClass("button-new-green"),2300)
                   })
                     break;
                 case 'edit':
                         var tr = mycz.table.tr('',data,buttonsCallback());
                         tr.css({'opacity':'0'});
-                        tr.addClass('info');
+                        tr.addClass('button-new-blue');
                         $('#' + data.key).replaceWith(tr)
                         tr.animate({
                             opacity: 1
                         }, 900, () => {
-                           setTimeout(() => tr.removeClass("info"),2300)
+                           setTimeout(() => tr.removeClass("button-new-blue"),2300)
                         })
                     break;
                 case 'delete':

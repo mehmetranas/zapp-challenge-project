@@ -73,7 +73,7 @@ tr: function (classes,data,buttons,attributes) {
    }
   
    if(mycz.helpers.isset(buttons.edit,true,true)) {
-    editButton = mycz.ele.btn('',
+    editButton = mycz.ele.btn('button-blue',
     mycz.ele.icon('ion-edit','',''),
     function () {
         var result = {
@@ -94,7 +94,7 @@ tr: function (classes,data,buttons,attributes) {
    }
 
    if(mycz.helpers.isset(buttons.delete,true,true)) {
-       deleteButton = mycz.ele.btn('',
+       deleteButton = mycz.ele.btn('button-red',
        mycz.ele.icon('ion-android-delete','',''),
        function () {        
            var result = {

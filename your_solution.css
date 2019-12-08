@@ -1,32 +1,79 @@
 html,
 body {
   height: 100%;
+  margin: 0;
+}
+.center-items {
+  display: flex !important;
+  align-items: center;
+  justify-items: center;
 }
 /* Sidenav */
 
 .sidenav {
-    height: 100%;
-    width: 160px;
+    margin: 0;
+    padding: 0;
+    width: 200px;
+    background-color: #f1f1f1;
     position: fixed;
-    z-index: 1;
-    top: 0;
-    left: 0;
-    overflow-x: hidden;
-    padding-top: 20px;
+    height: 100%;
+    overflow: auto;
+    display: flex;
+    align-items: center;
+  }
+  .sidenav a {
+    display: block;
+    color: black;
+    padding: 16px;
+    text-decoration: none;
+    width: 100%;
   }
   
+  .sidenav a.active {
+    background-color: #4CAF50;
+    color: white;
+  }
+  .sidenav a:hover:not(.active) {
+    background-color: #555;
+    color: white;
+  }
+  div.main {
+    margin-left: 200px;
+    padding: 1px 16px;
+    height: 1000px;
+  }
   .main {
-    font-size: 15px; /* Increased text to enable scrolling */
-    padding: 0px 10px;
-    margin-left: 160px;
-    overflow: auto;
+    margin-left: 200px;
+    padding: 1px 16px;
+    height: 1000px;
   }
 
-  .center-items {
-    display: flex !important;
-    align-items: center;
-    justify-items: center;
+  @media screen and (max-width: 700px) {
+    .sidenav {
+      width: 100%;
+      height: auto;
+      position: relative;
+    }
+    .sidenav a {float: left;}
+    div.main {margin-left: 0;}
   }
+  
+  @media screen and (max-width: 400px) {
+    .sidenav a {
+      text-align: center;
+      float: none;
+    }
+  }
+
+  /* Header */
+  .header {
+    padding: 60px;
+    text-align: center;
+    background: #1abc9c;
+    color: white;
+    font-size: 30px;
+  }
+  
 
   /* Message div */
 .my-alert-main {
@@ -58,7 +105,7 @@ table {
 
 th, td, tr{
   text-align: left;
-  padding: 12px;
+  padding: 8px;
 }
 
 tr:nth-child(even){background-color: #f2f2f2}
