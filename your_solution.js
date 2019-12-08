@@ -248,7 +248,7 @@ $(document).ready(function(){
                   $('#customers-table').append(tr);
                   tr.animate({
                       opacity: 1
-                  }, 900, () => {
+                  }, 700, () => {
                      setTimeout(() => tr.removeClass("alert-success"),2300)
                   })
                     break;
@@ -279,9 +279,9 @@ $(document).ready(function(){
 
 
         showCustomersTable: function (customers) {
-            var customersTable = mycz.table.new('',true,
+            var customersTable = mycz.table.new('',
                     'All Customers',
-                    ['Company Name','Customer Name'],
+                    ['Company Name','Customer Name','Actions'],
                     customers,
                     buttonsCallback(),
                     {'id':'customers-table'});

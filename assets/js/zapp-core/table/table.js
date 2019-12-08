@@ -2,14 +2,13 @@ mycz.table = {
     /**
  * Create a table
  * @param classes 
- * @param thead boolen
  * @param caption string, table caption
  * @param headRowEls array of head row titles
  * @param data array of data objects
  * @param buttons object, allowed buttons and action callback (edit,delete,callback)
  */
 // TODO add tooltips by tooltip plugin
-  new: function (classes,thead,caption,headRowEls,data,buttons,attributes,callback) {
+  new: function (classes,caption,headRowEls,data,buttons,attributes,callback) {
     var table = $('<table />');
     buttons = mycz.helpers.isset(buttons, true, true) ? buttons : {};
     if(mycz.helpers.isset(classes,true,true)){
@@ -27,11 +26,6 @@ mycz.table = {
       table.append(cp);
     }
   
-    if(mycz.helpers.isset(thead,true,true)){
-        thead = $('<thead>');
-        table.append(thead);
-    }
-  
     if(mycz.helpers.isset(headRowEls,true,true)) {
       var headRow = $('<tr>');
       headRowEls.forEach(function(el) {
@@ -40,7 +34,7 @@ mycz.table = {
         })
         headRow.append(th);
       });
-      thead.append(headRow);
+      table.append(headRow);
     }
     
     if(mycz.helpers.isArray(data) && data.length > 0) {
@@ -119,19 +113,24 @@ tr: function (classes,data,buttons,attributes) {
     },{"id":"delete-button","type":"delete"});
    }else {
      deleteButton = false;
-   }
-       
-   for (const key in data) {
-     if (data.hasOwnProperty(key)) {
-       tr.append($('<td>').attr('name',key).text(data[key]));
-       if(editButton)
-         tr.append(editButton);
-       if(deleteButton)
-         tr.append(deleteButton)
-       if(key === 'id' || key === 'key') // Assign an id for tracking this row data any where
-        tr.attr('id',data[key]);
-     }
-   }  
+    }
+    
+    for (const key in data) {
+      if (data.hasOwnProperty(key)) {
+        var td = $('<td>').attr('name',key).text(data[key]);
+        tr.append(td);
+        if(key === 'id' || key === 'key')
+     td.hide()
+     
+     if(key === 'id' || key === 'key') // Assign an id for tracking this row data any where
+     tr.attr('id',data[key]);
+    }
+  }  
+  var tdActions = $('<td>');
+  if(editButton)
+     tr.append(tdActions.append(editButton));
+     if(deleteButton)
+     tr.append(tdActions.append(deleteButton));
    return tr;
   },
 
