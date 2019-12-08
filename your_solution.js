@@ -122,7 +122,7 @@ $(document).ready(function(){
             steps.updateCustomersTable(data,actionType)
         } catch (error) {
             console.log(error);
-            mycz.modal.templates.with_icon('Please fill requirements fields','','ion-android-alert')
+            mycz.modal.templates.with_icon('Ooppss','Something went wrong.','ion-android-alert')
             
         }
     };
@@ -150,7 +150,7 @@ $(document).ready(function(){
                 'button-dark',mycz.ele.icon('ion-person-add','','') +
                 ' Add Customer',
                 function(){
-                    var isMobile = $('.closed-button').display === 'none' ? false : true;console.log(isMobile);
+                    var isMobile = $('.closed-button').display === 'none' ? false : true;
                     if(isMobile) collapsedMenu(); 
                     steps.newCustomer(null,saveOrUpdateCustomer)
                 },
@@ -222,10 +222,10 @@ $(document).ready(function(){
                 if(validationMessages.length > 0) {
                     var validationText = "";
                     validationMessages.forEach(t => {
-                        validationText += t 
+                        validationText += " <strong>'" + t + "'</strong>" 
                     });
-                    mycz.modal.templates.with_icon('Please fill these required fields',
-                                                    validationText,
+                    mycz.modal.templates.with_icon('Required fields',
+                                                    'Please fill these required fields ' + validationText,
                                                     'ion-android-alert')
 
                 } else {
