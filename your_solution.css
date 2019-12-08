@@ -11,9 +11,10 @@ body {
 /* Sidenav */
 
 .sidenav {
+    z-index: 100;
     margin: 0;
     padding: 0;
-    width: 200px;
+    width: 100%;
     background-color: #f1f1f1;
     position: fixed;
     height: 100%;
@@ -22,6 +23,7 @@ body {
     align-items: end;
     padding-top: 10px;
     flex-direction: column;
+    width: 100%;
   }
   .sidenav a {
     display: block;
@@ -48,14 +50,33 @@ body {
     height: 1000px;
   }
 
+  .closed-button {
+    display: block !important;
+    align-self: flex-end;
+    width: 50px !important;
+  }
+  
+  .menu-button {
+    display: block !important;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50px !important;
+  }
+  
   @media only screen and (min-width: 1200px){
     .main {
       margin-left: 200px;
     }
-  
+    .closed-button {
+      display: none !important;
+    }
+    .menu-button {
+      display: none !important;
+    }
     .sidenav {
       width: calc(224px);
-      display: flex;
+      display: flex !important;
     }
   }
 
@@ -75,6 +96,8 @@ body {
   background: #1abc9c;
   color: white;
   font-size: 30px;
+  display:flex;
+  flex-direction: column;
 }
 
   /* Message div */

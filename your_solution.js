@@ -29,6 +29,14 @@ $(document).ready(function(){
 
     // Your code goes here.
 
+    collapsedMenu = function (params) {
+        var display = $(".sidenav").css('display');
+        if(display === 'none')
+            $(".sidenav").css('display','flex');
+        else
+            $(".sidenav").css('display',"none")
+    }
+
     checkDataIsEmptyOrNot = function () {
         var customers = getCustomers();
         var messageDiv = $(".my-alert-main");
@@ -137,12 +145,14 @@ $(document).ready(function(){
             // create sidebar div
             // TODO fix sidebar on wide screen
             var sidebar = mycz.ele.div('sidenav button-new-dark bg-f8','','');
+            var closedButton = mycz.ele.btn('closed-button button-dark','X',collapsedMenu,{});
             var slogan = mycz.ele.div('slogan','Customize Your Customers Easily...','')
             var customer_add = mycz.ele.btn(
                 'button-dark',mycz.ele.icon('ion-person-add','','') +
                 ' Add Customer',
                 function(){steps.newCustomer(null,saveOrUpdateCustomer)},
                 '');
+            sidebar.append(closedButton);
             sidebar.append(slogan);
             sidebar.append(customer_add);
             container.append(sidebar);
@@ -155,6 +165,8 @@ $(document).ready(function(){
          */
         createHeader: function(callback){
             var header = mycz.ele.div('header button-blue','Customers','');
+            var button = mycz.ele.btn('button-dark menu-button','☰',collapsedMenu,{});
+            header.append(button);
             container.append(header);
         },
 
